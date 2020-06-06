@@ -11,7 +11,7 @@ class Soldier {
   ID id = SL;
   public: 
     Soldier(){};
-    ~Soldier(){};
+    virtual ~Soldier(){};
     void setDamage(uint damageL){
       this->damage_level = damageL;
     }

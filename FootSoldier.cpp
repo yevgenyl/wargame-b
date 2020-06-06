@@ -22,8 +22,12 @@ void FootSoldier::attack(std::pair<int,int> location, std::vector<std::pair<std:
         std::vector<std::pair<std::pair<int,int>,Soldier*>> enemy,
         std::vector<std::pair<std::vector<Soldier*>,Soldier*>> radiusAndReference){
     Soldier *closestenemy = closestEnemy(location,enemy);
-    if(closestenemy != nullptr) { // If enemy exist around current soldier
-        closestenemy->setHelath(closestenemy->getHealth() - this->getDamage());
+    if(closestenemy != nullptr && closestenemy->getHealth() > 0) { // If enemy exist around current soldier
+                if(healthInRange(closestenemy->getHealth() - this->getDamage())) {
+            closestenemy->setHelath(closestenemy->getHealth() - this->getDamage());
+        } else{
+            closestenemy->setHelath(0);
+        }
     }
 }
 
@@ -34,6 +38,7 @@ Soldier* FootSoldier::closestEnemy(std::pair<int,int> location, std::vector<std:
         for (int i = 0; i < enemy.size(); i++) {
             std::pair<int, int> current = enemy[i].first; // Current enemy location (x,y).
             Soldier *soldier = enemy[i].second; // Current enemy object pointer.
+            if(soldier != nullptr && healthInRange(soldier->getHealth()))
             if(distance(current.first, current.second, location.first, location.second) < closestDistance){ // If smaller distance found.
                 closestDistance = distance(current.first, current.second, location.first, location.second); // We set new distance as closest.
                 closestEnemy = soldier; // We update closest enemy object pointer.
@@ -48,6 +53,10 @@ Soldier* FootSoldier::closestEnemy(std::pair<int,int> location, std::vector<std:
 float FootSoldier::distance(int x1, int y1, int x2, int y2){
     return sqrt(pow(x2 - x1, 2) +
                 pow(y2 - y1, 2) * 1.0);
+}
+
+bool FootSoldier::healthInRange(uint health){
+    return health > 0 && health <=200;
 }
 
 string FootSoldier::toString(){
